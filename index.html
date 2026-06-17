@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TradeTrack POS – The Ultimate System for Motor Spares Stores</title>
+  <meta name="description" content="TradeTrack POS is the all-in-one point-of-sale, inventory, HR and multi-store management platform built specifically for motor spares and trade businesses in South Africa." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #0ea5e9;
+      --primary-dark: #0284c7;
+      --primary-light: #38bdf8;
+      --accent: #a855f7;
+      --accent-dark: #9333ea;
+      --green: #22c55e;
+      --orange: #f59e0b;
+      --red: #ef4444;
+      --bg: #060b18;
+      --bg2: #0d1526;
+      --bg3: #111827;
+      --card: rgba(255,255,255,0.04);
+      --card-border: rgba(255,255,255,0.08);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── SCROLL ANIMATIONS ─── */
+    .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right { opacity: 0; transform: translateX(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 68px;
+      background: rgba(6,11,24,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: background 0.3s;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px; text-decoration: none;
+      font-weight: 800; font-size: 1.25rem; color: var(--text);
+      letter-spacing: -0.5px;
+    }
+    .nav-logo-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 0.9rem; color: #fff;
+      box-shadow: 0 0 20px rgba(14,165,233,0.4);
+    }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      color: var(--text-muted); text-decoration: none; font-size: 0.9rem;
+      font-weight: 500; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      display: flex; gap: 12px; align-items: center;
+    }
+    .btn-ghost {
+      padding: 8px 20px; border-radius: 8px; font-size: 0.875rem;
+      font-weight: 600; cursor: pointer; text-decoration: none;
+      color: var(--text-muted); background: transparent;
+      border: 1px solid rgba(255,255,255,0.12); transition: all 0.2s;
+    }
+    .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.24); background: rgba(255,255,255,0.05); }
+    .btn-primary {
+      padding: 9px 22px; border-radius: 8px; font-size: 0.875rem;
+      font-weight: 700; cursor: pointer; text-decoration: none; border: none;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff; box-shadow: 0 0 24px rgba(14,165,233,0.35);
+      transition: all 0.2s; white-space: nowrap;
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 0 36px rgba(14,165,233,0.5); }
+    .btn-large {
+      padding: 16px 36px; border-radius: 12px; font-size: 1rem;
+      font-weight: 700; cursor: pointer; text-decoration: none; border: none;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff; box-shadow: 0 0 32px rgba(14,165,233,0.4);
+      transition: all 0.25s; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-large:hover { transform: translateY(-2px); box-shadow: 0 0 48px rgba(14,165,233,0.55); }
+    .btn-outline-large {
+      padding: 15px 36px; border-radius: 12px; font-size: 1rem;
+      font-weight: 600; cursor: pointer; text-decoration: none;
+      background: transparent; color: var(--text);
+      border: 1px solid rgba(255,255,255,0.2); transition: all 0.25s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-outline-large:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.35); }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      padding: 120px 5% 80px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(14,165,233,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(168,85,247,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 20% 90%, rgba(34,197,94,0.07) 0%, transparent 50%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(14,165,233,0.12); border: 1px solid rgba(14,165,233,0.3);
+      border-radius: 100px; padding: 6px 16px; font-size: 0.8rem; font-weight: 600;
+      color: var(--primary-light); margin-bottom: 28px; position: relative; z-index: 1;
+    }
+    .badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse-dot 2s infinite; }
+    @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+      position: relative; z-index: 1;
+      max-width: 900px;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--text-muted); max-width: 640px;
+      margin-bottom: 40px; position: relative; z-index: 1; line-height: 1.7;
+    }
+    .hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; margin-bottom: 72px; }
+
+    /* ─── APP MOCKUP ─── */
+    .mockup-window {
+      position: relative; z-index: 1;
+      width: min(1100px, 90vw);
+      border-radius: 16px;
+      background: #0d1526;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.05),
+        0 40px 80px rgba(0,0,0,0.6),
+        0 0 120px rgba(14,165,233,0.12);
+      overflow: hidden;
+    }
+    .mockup-titlebar {
+      display: flex; align-items: center; gap: 8px;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .tb-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .tb-red { background: #ff5f57; }
+    .tb-yellow { background: #ffbd2e; }
+    .tb-green { background: #28ca41; }
+    .tb-title {
+      flex: 1; text-align: center; font-size: 0.78rem;
+      color: var(--text-dim); font-weight: 500;
+    }
+
+    /* POS SCREEN MOCKUP */
+    .pos-screen {
+      display: grid; grid-template-columns: 1fr 360px;
+      height: 520px; overflow: hidden;
+    }
+    .pos-left {
+      padding: 16px; border-right: 1px solid rgba(255,255,255,0.07);
+      display: flex; flex-direction: column; gap: 12px; background: #0a1020;
+    }
+    .pos-search {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; padding: 10px 14px;
+    }
+    .pos-search input {
+      background: transparent; border: none; outline: none;
+      color: var(--text); font-size: 0.85rem; flex: 1; font-family: inherit;
+    }
+    .pos-search input::placeholder { color: var(--text-dim); }
+    .search-icon { color: var(--text-dim); font-size: 0.9rem; }
+    .pos-product-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; overflow: hidden;
+    }
+    .pos-product-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 10px 8px; text-align: center; cursor: pointer;
+      transition: all 0.15s;
+    }
+    .pos-product-card:hover { background: rgba(14,165,233,0.1); border-color: rgba(14,165,233,0.3); }
+    .ppc-code { font-size: 0.6rem; color: var(--primary-light); font-family: 'JetBrains Mono', monospace; margin-bottom: 4px; }
+    .ppc-name { font-size: 0.7rem; color: var(--text); font-weight: 600; margin-bottom: 4px; line-height: 1.3; }
+    .ppc-price { font-size: 0.8rem; color: var(--green); font-weight: 700; }
+    .ppc-stock { font-size: 0.6rem; color: var(--text-dim); }
+
+    .pos-right { padding: 14px; display: flex; flex-direction: column; background: #0d1526; }
+    .pos-customer {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(14,165,233,0.08); border: 1px solid rgba(14,165,233,0.2);
+      border-radius: 8px; padding: 10px 12px; margin-bottom: 12px;
+    }
+    .cust-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .cust-info { flex: 1; }
+    .cust-name { font-size: 0.78rem; font-weight: 700; color: var(--text); }
+    .cust-detail { font-size: 0.65rem; color: var(--text-muted); }
+    .loyalty-badge {
+      background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3);
+      border-radius: 4px; padding: 2px 6px; font-size: 0.6rem; color: #c084fc; font-weight: 600;
+    }
+
+    .cart-table { flex: 1; overflow: hidden; }
+    .cart-header {
+      display: grid; grid-template-columns: 1fr 48px 80px 28px;
+      padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .cart-header span { font-size: 0.62rem; color: var(--text-dim); font-weight: 600; text-transform: uppercase; }
+    .cart-row {
+      display: grid; grid-template-columns: 1fr 48px 80px 28px;
+      padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.04);
+      align-items: center;
+    }
+    .cr-name { font-size: 0.72rem; color: var(--text); font-weight: 500; }
+    .cr-code { font-size: 0.6rem; color: var(--primary-light); font-family: 'JetBrains Mono', monospace; }
+    .cr-qty {
+      font-size: 0.72rem; color: var(--text); text-align: center;
+      background: rgba(255,255,255,0.06); border-radius: 4px; padding: 2px 4px;
+      width: 36px; text-align: center;
+    }
+    .cr-price { font-size: 0.75rem; color: var(--text); font-weight: 600; text-align: right; }
+    .cr-del { font-size: 0.7rem; color: var(--text-dim); text-align: center; cursor: pointer; }
+    .cr-del:hover { color: var(--red); }
+
+    .cart-totals {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 10px 8px;
+    }
+    .total-row {
+      display: flex; justify-content: space-between;
+      font-size: 0.72rem; color: var(--text-muted); margin-bottom: 4px;
+    }
+    .total-row.final {
+      font-size: 0.95rem; font-weight: 800; color: var(--text); margin-top: 6px;
+    }
+    .total-row.final span:last-child { color: var(--green); }
+
+    .payment-methods { display: flex; gap: 6px; margin-bottom: 8px; }
+    .pm-btn {
+      flex: 1; padding: 7px 4px; border-radius: 6px; font-size: 0.68rem;
+      font-weight: 600; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04); color: var(--text-muted);
+      transition: all 0.15s; text-align: center;
+    }
+    .pm-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+    .pos-complete {
+      width: 100%; padding: 12px; border-radius: 8px; font-size: 0.85rem;
+      font-weight: 700; cursor: pointer; border: none;
+      background: linear-gradient(135deg, var(--green), #16a34a);
+      color: #fff; box-shadow: 0 4px 14px rgba(34,197,94,0.35);
+    }
+
+    /* SIDEBAR */
+    .pos-sidebar {
+      width: 54px; background: #080f1e;
+      border-right: 1px solid rgba(255,255,255,0.07);
+      display: flex; flex-direction: column; align-items: center;
+      padding: 14px 0; gap: 6px;
+    }
+    .si-btn {
+      width: 38px; height: 38px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1rem; color: var(--text-dim);
+      transition: all 0.15s;
+    }
+    .si-btn:hover, .si-btn.active { background: rgba(14,165,233,0.15); color: var(--primary-light); }
+
+    /* ─── STATS STRIP ─── */
+    .stats-strip {
+      background: rgba(255,255,255,0.02);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 32px 5%;
+      display: flex; justify-content: center; gap: 0; flex-wrap: wrap;
+    }
+    .stat-item {
+      flex: 1; min-width: 140px; max-width: 220px;
+      text-align: center; padding: 12px 24px;
+      border-right: 1px solid rgba(255,255,255,0.07);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-number { font-size: 2rem; font-weight: 900; letter-spacing: -1px; color: var(--text); }
+    .stat-number span { color: var(--primary-light); }
+    .stat-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* ─── SECTION HEADERS ─── */
+    section { padding: 100px 5%; }
+    .section-badge {
+      display: inline-block; background: rgba(14,165,233,0.1); border: 1px solid rgba(14,165,233,0.25);
+      border-radius: 100px; padding: 5px 14px; font-size: 0.75rem; font-weight: 700;
+      color: var(--primary-light); letter-spacing: 0.5px; text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .section-badge.purple { background: rgba(168,85,247,0.1); border-color: rgba(168,85,247,0.25); color: #c084fc; }
+    .section-badge.green { background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.25); color: #4ade80; }
+    .section-badge.orange { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.25); color: #fbbf24; }
+
+    h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 1.05rem; color: var(--text-muted); max-width: 580px; line-height: 1.7;
+    }
+    .section-header { margin-bottom: 60px; }
+
+    /* ─── PAIN SECTION ─── */
+    .pain-section { background: var(--bg); }
+    .pain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .pain-card {
+      background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.15);
+      border-radius: 16px; padding: 28px;
+    }
+    .pain-icon { font-size: 1.8rem; margin-bottom: 14px; }
+    .pain-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .pain-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ─── FEATURE SHOWCASE ─── */
+    .feature-showcase {
+      background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
+    }
+    .showcase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .showcase-grid.reverse { direction: rtl; }
+    .showcase-grid.reverse > * { direction: ltr; }
+    .feature-list { list-style: none; margin-top: 24px; display: flex; flex-direction: column; gap: 12px; }
+    .feature-list li {
+      display: flex; align-items: flex-start; gap: 12px;
+      font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;
+    }
+    .feature-list li::before {
+      content: ''; width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: center;
+    }
+    .feature-list li strong { color: var(--text); font-weight: 600; }
+
+    /* ─── DASHBOARD MOCKUP ─── */
+    .dashboard-mockup {
+      background: #0a1020; border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px; padding: 20px; overflow: hidden;
+    }
+    .dash-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+    .kpi-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px; padding: 14px 12px;
+    }
+    .kpi-label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .kpi-value { font-size: 1.2rem; font-weight: 800; color: var(--text); letter-spacing: -0.5px; }
+    .kpi-delta { font-size: 0.65rem; margin-top: 4px; font-weight: 600; }
+    .kpi-delta.up { color: var(--green); }
+    .kpi-delta.down { color: var(--red); }
+    .dash-charts { display: grid; grid-template-columns: 1.6fr 1fr; gap: 12px; }
+    .dash-chart {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px; padding: 14px;
+    }
+    .chart-title { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .bar-chart { display: flex; align-items: flex-end; gap: 5px; height: 90px; }
+    .bar { flex: 1; border-radius: 3px 3px 0 0; transition: opacity 0.2s; position: relative; min-width: 0; }
+    .bar:hover { opacity: 0.8; }
+    .bar-label { position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); font-size: 0.55rem; color: var(--text-dim); white-space: nowrap; }
+    .donut-wrap { display: flex; align-items: center; justify-content: center; flex-direction: column; height: 90px; gap: 6px; }
+    .donut-ring {
+      width: 70px; height: 70px; border-radius: 50%;
+      background: conic-gradient(var(--primary) 0% 42%, var(--accent) 42% 68%, var(--green) 68% 83%, var(--orange) 83% 100%);
+      mask: radial-gradient(transparent 28px, black 28px);
+      -webkit-mask: radial-gradient(transparent 28px, black 28px);
+    }
+    .donut-legend { display: flex; flex-direction: column; gap: 3px; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.6rem; color: var(--text-muted); }
+    .legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .dash-table { margin-top: 12px; }
+    .dt-header { display: grid; grid-template-columns: 80px 1fr 80px 80px; gap: 8px; padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .dt-header span { font-size: 0.6rem; color: var(--text-dim); font-weight: 600; text-transform: uppercase; }
+    .dt-row { display: grid; grid-template-columns: 80px 1fr 80px 80px; gap: 8px; padding: 7px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); align-items: center; }
+    .dt-row span { font-size: 0.68rem; color: var(--text-muted); }
+    .dt-row span:first-child { color: var(--primary-light); font-family: 'JetBrains Mono', monospace; }
+    .dt-row span:last-child { text-align: right; }
+    .status-badge {
+      display: inline-flex; padding: 2px 7px; border-radius: 4px;
+      font-size: 0.6rem; font-weight: 700;
+    }
+    .sb-green { background: rgba(34,197,94,0.15); color: var(--green); }
+    .sb-blue { background: rgba(14,165,233,0.15); color: var(--primary-light); }
+    .sb-orange { background: rgba(245,158,11,0.15); color: var(--orange); }
+
+    /* ─── FEATURES GRID ─── */
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .feat-card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 28px; transition: all 0.25s;
+      position: relative; overflow: hidden;
+    }
+    .feat-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      opacity: 0; transition: opacity 0.25s;
+    }
+    .feat-card:hover { border-color: rgba(255,255,255,0.16); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+    .feat-card:hover::before { opacity: 1; }
+    .feat-icon {
+      width: 48px; height: 48px; border-radius: 12px; margin-bottom: 18px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
+    }
+    .feat-icon.blue { background: rgba(14,165,233,0.12); }
+    .feat-icon.purple { background: rgba(168,85,247,0.12); }
+    .feat-icon.green { background: rgba(34,197,94,0.12); }
+    .feat-icon.orange { background: rgba(245,158,11,0.12); }
+    .feat-icon.red { background: rgba(239,68,68,0.12); }
+    .feat-icon.cyan { background: rgba(6,182,212,0.12); }
+    .feat-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .feat-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+    .feat-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .feat-tag {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px; padding: 2px 8px; font-size: 0.65rem; color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ─── INVENTORY MOCKUP ─── */
+    .inventory-mockup {
+      background: #0a1020; border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px; overflow: hidden;
+    }
+    .inv-toolbar {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.02);
+    }
+    .inv-search {
+      flex: 1; background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;
+      padding: 6px 12px; font-size: 0.75rem; color: var(--text-muted);
+      font-family: inherit;
+    }
+    .inv-btn {
+      padding: 6px 14px; border-radius: 6px; font-size: 0.72rem; font-weight: 600;
+      cursor: pointer; border: none; background: var(--primary); color: #fff;
+    }
+    .inv-table { width: 100%; }
+    .inv-thead { background: rgba(255,255,255,0.03); }
+    .inv-thead th { padding: 8px 14px; font-size: 0.65rem; color: var(--text-dim); font-weight: 600; text-transform: uppercase; text-align: left; }
+    .inv-tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .inv-tbody tr:hover { background: rgba(255,255,255,0.02); }
+    .inv-tbody td { padding: 9px 14px; font-size: 0.72rem; color: var(--text-muted); }
+    .inv-tbody td:first-child { font-family: 'JetBrains Mono', monospace; color: var(--primary-light); font-size: 0.68rem; }
+    .inv-tbody td:nth-child(2) { color: var(--text); font-weight: 500; }
+    .stock-low { color: var(--red) !important; font-weight: 700; }
+    .stock-ok { color: var(--green) !important; font-weight: 700; }
+    .stock-med { color: var(--orange) !important; font-weight: 700; }
+
+    /* ─── MULTI-STORE ─── */
+    .multistore-diagram {
+      background: #0a1020; border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px; padding: 24px;
+    }
+    .ms-head-office {
+      background: linear-gradient(135deg, rgba(14,165,233,0.15), rgba(168,85,247,0.15));
+      border: 1px solid rgba(14,165,233,0.3); border-radius: 12px; padding: 16px 20px;
+      text-align: center; margin-bottom: 20px;
+    }
+    .ms-ho-label { font-size: 0.7rem; color: var(--primary-light); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 4px; }
+    .ms-ho-name { font-size: 1rem; font-weight: 800; color: var(--text); }
+    .ms-branches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .ms-branch {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; padding: 12px; text-align: center;
+      position: relative;
+    }
+    .ms-branch::before {
+      content: ''; position: absolute; top: -20px; left: 50%;
+      transform: translateX(-50%); width: 1px; height: 20px;
+      background: rgba(255,255,255,0.15);
+    }
+    .ms-branch-name { font-size: 0.75rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .ms-branch-stat { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 2px; }
+    .ms-sync-badge {
+      display: inline-block; background: rgba(34,197,94,0.15);
+      border: 1px solid rgba(34,197,94,0.3); border-radius: 4px;
+      padding: 1px 7px; font-size: 0.6rem; color: var(--green); font-weight: 700; margin-top: 6px;
+    }
+    .ms-lines { position: relative; height: 20px; margin: 0 -24px; }
+
+    /* ─── REPORTS ─── */
+    .reports-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .report-card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: 12px; padding: 18px 16px; transition: all 0.2s;
+    }
+    .report-card:hover { border-color: rgba(14,165,233,0.3); background: rgba(14,165,233,0.05); }
+    .rc-icon { font-size: 1.3rem; margin-bottom: 8px; }
+    .rc-name { font-size: 0.82rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .rc-desc { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; }
+
+    /* ─── HR SECTION ─── */
+    .hr-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .hr-card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: 12px; padding: 20px; text-align: center;
+    }
+    .hr-card-icon { font-size: 2rem; margin-bottom: 10px; }
+    .hr-card h4 { font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .hr-card p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* ─── SECURITY ─── */
+    .security-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .sec-card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 24px; display: flex; align-items: flex-start; gap: 16px;
+    }
+    .sec-icon {
+      width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+      background: rgba(14,165,233,0.1);
+    }
+    .sec-card h4 { font-size: 0.92rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .sec-card p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ─── TESTIMONIALS ─── */
+    .testimonials-section { background: var(--bg2); }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .testimonial-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; padding: 28px; position: relative;
+    }
+    .quote-mark { font-size: 3rem; line-height: 1; color: var(--primary); opacity: 0.3; position: absolute; top: 16px; left: 20px; font-family: Georgia, serif; }
+    .testimonial-text { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 20px; padding-top: 20px; }
+    .testimonial-author { display: flex; align-items: center; gap: 12px; }
+    .author-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.9rem; color: #fff; flex-shrink: 0;
+    }
+    .author-name { font-size: 0.85rem; font-weight: 700; color: var(--text); }
+    .author-role { font-size: 0.75rem; color: var(--text-dim); }
+    .stars { color: var(--orange); font-size: 0.75rem; letter-spacing: 2px; margin-bottom: 14px; }
+
+    /* ─── PRICING ─── */
+    .pricing-section { background: var(--bg); }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 960px; margin: 0 auto; }
+    .pricing-card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: 20px; padding: 32px 28px; position: relative;
+      transition: all 0.25s;
+    }
+    .pricing-card.featured {
+      background: linear-gradient(135deg, rgba(14,165,233,0.1), rgba(168,85,247,0.1));
+      border-color: rgba(14,165,233,0.3);
+      box-shadow: 0 0 60px rgba(14,165,233,0.12);
+    }
+    .pricing-popular {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff; font-size: 0.7rem; font-weight: 800;
+      padding: 4px 16px; border-radius: 100px; white-space: nowrap;
+      letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .pricing-name { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .pricing-price { font-size: 2.4rem; font-weight: 900; color: var(--text); letter-spacing: -1.5px; line-height: 1; margin-bottom: 4px; }
+    .pricing-price span { font-size: 1.1rem; font-weight: 600; color: var(--text-muted); vertical-align: top; margin-top: 6px; display: inline-block; }
+    .pricing-cycle { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 24px; }
+    .pricing-features { list-style: none; margin-bottom: 32px; display: flex; flex-direction: column; gap: 10px; }
+    .pricing-features li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 0.83rem; color: var(--text-muted); line-height: 1.4;
+    }
+    .pricing-features li::before {
+      content: '✓'; color: var(--green); font-weight: 800;
+      flex-shrink: 0; width: 16px; height: 16px; display: flex; align-items: center;
+    }
+    .pricing-features li.dim::before { content: '—'; color: var(--text-dim); }
+    .pricing-features li.dim { color: var(--text-dim); }
+    .pricing-btn {
+      width: 100%; padding: 13px; border-radius: 10px; font-size: 0.9rem;
+      font-weight: 700; cursor: pointer; text-decoration: none;
+      display: block; text-align: center; transition: all 0.2s;
+    }
+    .pricing-btn.outline { border: 1px solid rgba(255,255,255,0.15); background: transparent; color: var(--text); }
+    .pricing-btn.outline:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.3); }
+    .pricing-btn.filled { border: none; background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; box-shadow: 0 0 24px rgba(14,165,233,0.3); }
+    .pricing-btn.filled:hover { transform: translateY(-1px); box-shadow: 0 0 36px rgba(14,165,233,0.45); }
+
+    /* ─── CTA SECTION ─── */
+    .cta-section {
+      background: linear-gradient(135deg, rgba(14,165,233,0.06) 0%, rgba(168,85,247,0.06) 100%);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      text-align: center;
+    }
+    .cta-section h2 { font-size: clamp(2rem, 4vw, 3.2rem); max-width: 700px; margin: 0 auto 16px; }
+    .cta-section p { color: var(--text-muted); font-size: 1.05rem; max-width: 520px; margin: 0 auto 40px; }
+    .cta-section .hero-ctas { margin-bottom: 48px; }
+    .cta-note { font-size: 0.8rem; color: var(--text-dim); }
+    .cta-note span { color: var(--green); font-weight: 600; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #040810;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 60px 5% 32px;
+    }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+    .footer-brand p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; margin: 12px 0 20px; max-width: 260px; }
+    .footer-heading { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: var(--text-dim); margin-bottom: 16px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { font-size: 0.85rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-copy { font-size: 0.78rem; color: var(--text-dim); }
+    .footer-legal { display: flex; gap: 20px; }
+    .footer-legal a { font-size: 0.78rem; color: var(--text-dim); text-decoration: none; }
+
+    /* ─── CONTACT BAR ─── */
+    .contact-bar {
+      background: rgba(14,165,233,0.08); border: 1px solid rgba(14,165,233,0.2);
+      border-radius: 14px; padding: 20px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px; margin-top: 20px;
+    }
+    .contact-bar-info { display: flex; align-items: center; gap: 14px; }
+    .contact-bar-icon { font-size: 1.5rem; }
+    .contact-bar p { font-size: 0.82rem; color: var(--text-muted); }
+    .contact-bar strong { color: var(--text); font-size: 0.95rem; }
+
+    /* ─── DIVIDER ─── */
+    .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); margin: 0 5%; }
+
+    /* ─── ANNOUNCEMENT BAR ─── */
+    .announcement-bar {
+      background: linear-gradient(135deg, var(--primary-dark), var(--accent-dark));
+      padding: 10px 5%; text-align: center;
+      font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.95);
+    }
+    .announcement-bar a { color: #fff; font-weight: 800; text-decoration: underline; margin-left: 6px; }
+
+    /* ─── COMPARISON TABLE ─── */
+    .comparison-wrap { overflow-x: auto; }
+    .comparison-table { width: 100%; border-collapse: collapse; }
+    .comparison-table th {
+      padding: 14px 20px; text-align: center;
+      font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+      border-bottom: 2px solid rgba(255,255,255,0.08);
+    }
+    .comparison-table th:first-child { text-align: left; }
+    .comparison-table th.highlight { color: var(--primary-light); }
+    .comparison-table td {
+      padding: 12px 20px; font-size: 0.82rem; color: var(--text-muted);
+      border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center;
+    }
+    .comparison-table td:first-child { text-align: left; color: var(--text); font-weight: 500; }
+    .comparison-table td.highlight { background: rgba(14,165,233,0.04); }
+    .check { color: var(--green); font-size: 1rem; }
+    .cross { color: var(--red); font-size: 1rem; }
+    .partial { color: var(--orange); font-size: 0.75rem; font-weight: 600; }
+
+    /* ─── MOBILE ─── */
+    .mobile-menu-btn { display: none; background: none; border: none; color: var(--text); font-size: 1.4rem; cursor: pointer; }
+    @media (max-width: 900px) {
+      .nav-links, .nav-cta .btn-ghost { display: none; }
+      .mobile-menu-btn { display: block; }
+      .pain-grid, .features-grid, .testimonials-grid { grid-template-columns: 1fr 1fr; }
+      .showcase-grid { grid-template-columns: 1fr; }
+      .showcase-grid.reverse { direction: ltr; }
+      .pos-screen { grid-template-columns: 1fr; }
+      .pos-right { display: none; }
+      .dash-kpis { grid-template-columns: 1fr 1fr; }
+      .dash-charts { grid-template-columns: 1fr; }
+      .reports-grid { grid-template-columns: 1fr 1fr; }
+      .hr-cards { grid-template-columns: 1fr 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .ms-branches { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .pain-grid, .features-grid, .testimonials-grid, .reports-grid, .hr-cards { grid-template-columns: 1fr; }
+      .security-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      h2 { letter-spacing: -0.5px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="announcement-bar">
+  🎉 TradeTrack POS v1.0.107 is here — with Dual POS, HR &amp; Payroll, and Multi-Store sync.
+  <a href="#pricing">Get started today →</a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-icon">TT</div>
+    TradeTrack<span style="color:var(--primary-light);margin-left:3px">POS</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#inventory">Inventory</a></li>
+    <li><a href="#reports">Reports</a></li>
+    <li><a href="#multistore">Multi-Store</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="tel:+27000000000" class="btn-ghost">📞 Call Us</a>
+    <a href="#pricing" class="btn-primary">Get TradeTrack →</a>
+  </div>
+  <button class="mobile-menu-btn">☰</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-badge reveal">
+    <span class="badge-dot"></span>
+    Built for Motor Spares &amp; Trade Businesses in South Africa
+  </div>
+  <h1 class="reveal">
+    The POS System That<br />
+    <span class="gradient-text">Motor Spares Stores</span><br />
+    Actually Need
+  </h1>
+  <p class="reveal">
+    TradeTrack POS gives your store everything — lightning-fast sales, deep inventory control, credit accounts, multi-branch management, HR &amp; payroll, and 30+ real-time reports. All in one system.
+  </p>
+  <div class="hero-ctas reveal">
+    <a href="#pricing" class="btn-large">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      Start Free Trial
+    </a>
+    <a href="#features" class="btn-outline-large">
+      See All Features
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+    </a>
+  </div>
+
+  <!-- REAL APP SCREENSHOT -->
+  <div class="mockup-window reveal" style="max-width:min(1000px,88vw)">
+    <div class="mockup-titlebar">
+      <span class="tb-dot tb-red"></span>
+      <span class="tb-dot tb-yellow"></span>
+      <span class="tb-dot tb-green"></span>
+      <span class="tb-title">TradeTrack POS 1.0.107 — Live Production System</span>
+      <span style="font-size:0.65rem;color:var(--green);font-weight:700;margin-left:8px">● LIVE DATA</span>
+    </div>
+    <img src="screenshots/01_pos.png" alt="TradeTrack POS — Point of Sale Screen" style="width:100%;display:block;border-radius:0 0 15px 15px;" />
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stat-item reveal">
+    <div class="stat-number"><span>30</span>+</div>
+    <div class="stat-label">Built-in Reports</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-number"><span>2</span> POS</div>
+    <div class="stat-label">Simultaneous Terminals</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-number"><span>∞</span></div>
+    <div class="stat-label">Products &amp; Part Numbers</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-number"><span>5</span></div>
+    <div class="stat-label">User Permission Levels</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-number"><span>0</span></div>
+    <div class="stat-label">Data Sent to Cloud</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- PAIN POINTS -->
+<section class="pain-section">
+  <div class="section-header" style="text-align:center">
+    <div class="section-badge reveal" style="background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.25);color:#f87171">
+      Sound Familiar?
+    </div>
+    <h2 class="reveal">Every motor spares store has<br /><span class="gradient-text">these exact problems</span></h2>
+    <p class="section-sub reveal" style="margin:0 auto">We built TradeTrack specifically to eliminate the pain points that generic POS systems ignore.</p>
+  </div>
+  <div class="pain-grid reveal">
+    <div class="pain-card">
+      <div class="pain-icon">📋</div>
+      <h3>"I don't know what stock we actually have"</h3>
+      <p>Parts with the same cross-reference sold under different names. Duplicate entries. Phantom stock. You sell something, then discover there's nothing in the bin.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">💸</div>
+      <h3>"Customers owe me and I can't track it"</h3>
+      <p>Mechanics and workshops buy on account. By month-end you have a notebook full of debt you can't reconcile. Statements never go out. Cash flow suffers.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">🐢</div>
+      <h3>"The system slows my cashiers down"</h3>
+      <p>Too many clicks to find a part. Can't search by OEM number. No barcode scanner support. Customers waiting. Staff frustrated. Sales lost.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">🏪</div>
+      <h3>"I can't see what's happening at my other branch"</h3>
+      <p>Two stores, two separate systems, zero visibility. Branch A runs out of stock while Branch B is overstocked. No transfers. No consolidated reports.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">📊</div>
+      <h3>"I don't know if I'm actually making money"</h3>
+      <p>Sales figures don't equal profit. No clear picture of gross profit per category, per salesperson, or per customer. Flying blind every month.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">👥</div>
+      <h3>"Managing staff is a nightmare"</h3>
+      <p>Leave forms on paper. Timesheets in a book. Payslips calculated on a spreadsheet every month. One mistake and staff are upset. No audit trail.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- POS FEATURE SHOWCASE -->
+<section id="features" class="feature-showcase">
+  <div class="section-header">
+    <div class="section-badge reveal">Point of Sale</div>
+    <h2 class="reveal">The fastest POS in the<br /><span class="gradient-text">motor spares business</span></h2>
+    <p class="section-sub reveal">Dual terminals. Lightning search. Cross-reference codes. Built for the pace of a busy motor spares counter.</p>
+  </div>
+  <div class="showcase-grid">
+    <div class="reveal-left">
+      <div class="section-badge">Two Terminals. One System.</div>
+      <h3 style="font-size:1.6rem;font-weight:800;letter-spacing:-0.5px;margin:10px 0 12px">Run two counters simultaneously without stepping on each other's toes</h3>
+      <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.7">TradeTrack POS runs two fully independent POS terminals (POS 1 and POS 2) in parallel. Each has its own cart, its own customer, and its own payment flow. One cashier serves a walk-in while another processes a workshop's account order — simultaneously.</p>
+      <ul class="feature-list">
+        <li><strong>Search by part name, OEM number, barcode or cross-reference</strong> in milliseconds</li>
+        <li><strong>Image preview</strong> on hover — confirm the right part before adding to cart</li>
+        <li><strong>Loyalty points</strong> automatically earned and shown at checkout</li>
+        <li><strong>Lay-by</strong> with configurable minimum deposit and instalment tracking</li>
+        <li><strong>Quotes</strong> that can be recalled and converted to invoices</li>
+        <li><strong>Biometric fingerprint login</strong> — no PINs to forget or share</li>
+        <li><strong>Lost sale recording</strong> — know exactly what you didn't have in stock</li>
+        <li><strong>Online orders</strong> processing and catalog browsing mode</li>
+      </ul>
+    </div>
+    <div class="reveal-right">
+      <div style="border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);box-shadow:0 24px 60px rgba(0,0,0,0.5),0 0 80px rgba(14,165,233,0.1)">
+        <div style="background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.08);padding:10px 14px;display:flex;align-items:center;gap:7px">
+          <span style="width:11px;height:11px;border-radius:50%;background:#ff5f57;display:inline-block"></span>
+          <span style="width:11px;height:11px;border-radius:50%;background:#ffbd2e;display:inline-block"></span>
+          <span style="width:11px;height:11px;border-radius:50%;background:#28ca41;display:inline-block"></span>
+          <span style="flex:1;text-align:center;font-size:0.7rem;color:var(--text-dim)">TradeTrack POS — Point of Sale</span>
+          <span style="font-size:0.65rem;color:var(--green);font-weight:700">● LIVE</span>
+        </div>
+        <img src="screenshots/01_pos.png" alt="TradeTrack POS real screenshot" style="width:100%;display:block" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DASHBOARD -->
+<section style="background:var(--bg)">
+  <div class="section-header" style="text-align:center">
+    <div class="section-badge reveal">Real-Time Dashboard</div>
+    <h2 class="reveal">Know your numbers<br /><span class="gradient-text">at a glance</span></h2>
+    <p class="section-sub reveal" style="margin:0 auto">Live KPIs, 12-month sales bar charts, top-selling products, and today's transactions — all on one screen the moment you open the system.</p>
+  </div>
+  <div class="dashboard-mockup reveal" style="max-width:900px;margin:0 auto">
+    <div class="dash-kpis">
+      <div class="kpi-card">
+        <div class="kpi-label">Today's Sales</div>
+        <div class="kpi-value">R 24,830</div>
+        <div class="kpi-delta up">↑ 18% vs yesterday</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">This Month</div>
+        <div class="kpi-value">R 412,650</div>
+        <div class="kpi-delta up">↑ 7% vs last month</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Transactions Today</div>
+        <div class="kpi-value">142</div>
+        <div class="kpi-delta up">↑ 23 more than avg</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Outstanding Debtors</div>
+        <div class="kpi-value">R 38,200</div>
+        <div class="kpi-delta down">↓ R 4,100 since last week</div>
+      </div>
+    </div>
+    <div class="dash-charts">
+      <div class="dash-chart">
+        <div class="chart-title">Monthly Sales — Last 12 Months</div>
+        <div class="bar-chart">
+          <div class="bar" style="height:52%;background:rgba(14,165,233,0.5)"><span class="bar-label">Jul</span></div>
+          <div class="bar" style="height:61%;background:rgba(14,165,233,0.5)"><span class="bar-label">Aug</span></div>
+          <div class="bar" style="height:45%;background:rgba(14,165,233,0.5)"><span class="bar-label">Sep</span></div>
+          <div class="bar" style="height:70%;background:rgba(14,165,233,0.5)"><span class="bar-label">Oct</span></div>
+          <div class="bar" style="height:68%;background:rgba(14,165,233,0.5)"><span class="bar-label">Nov</span></div>
+          <div class="bar" style="height:90%;background:rgba(14,165,233,0.6)"><span class="bar-label">Dec</span></div>
+          <div class="bar" style="height:55%;background:rgba(14,165,233,0.5)"><span class="bar-label">Jan</span></div>
+          <div class="bar" style="height:62%;background:rgba(14,165,233,0.5)"><span class="bar-label">Feb</span></div>
+          <div class="bar" style="height:74%;background:rgba(14,165,233,0.5)"><span class="bar-label">Mar</span></div>
+          <div class="bar" style="height:80%;background:rgba(14,165,233,0.55)"><span class="bar-label">Apr</span></div>
+          <div class="bar" style="height:85%;background:rgba(14,165,233,0.55)"><span class="bar-label">May</span></div>
+          <div class="bar" style="height:100%;background:linear-gradient(to top,var(--primary),var(--primary-light))"><span class="bar-label">Jun</span></div>
+        </div>
+      </div>
+      <div class="dash-chart">
+        <div class="chart-title">Sales by Category</div>
+        <div style="display:flex;gap:12px;align-items:center;justify-content:center;height:90px">
+          <div class="donut-ring"></div>
+          <div class="donut-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--primary)"></div>Filters 42%</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Brakes 26%</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Oils 15%</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div>Other 17%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-table" style="margin-top:14px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
+      <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.06)">
+        <span style="font-size:0.72rem;font-weight:700;color:var(--text-muted)">TODAY'S TRANSACTIONS</span>
+        <span style="font-size:0.68rem;color:var(--text-dim)">Showing 5 of 142</span>
+      </div>
+      <div class="dt-header">
+        <span>Ref</span><span>Customer</span><span style="text-align:center">Status</span><span style="text-align:right">Total</span>
+      </div>
+      <div class="dt-row"><span>SALE-1094</span><span style="color:var(--text)">Benny's Motors</span><span style="text-align:center"><span class="status-badge sb-green">Completed</span></span><span>R 2,036.00</span></div>
+      <div class="dt-row"><span>SALE-1093</span><span style="color:var(--text)">VW Auto Centre</span><span style="text-align:center"><span class="status-badge sb-green">Completed</span></span><span>R 845.00</span></div>
+      <div class="dt-row"><span>QUOTE-0312</span><span style="color:var(--text)">Walk-in Customer</span><span style="text-align:center"><span class="status-badge sb-blue">Quote</span></span><span>R 1,240.00</span></div>
+      <div class="dt-row"><span>SALE-1092</span><span style="color:var(--text)">Ahmed Spares</span><span style="text-align:center"><span class="status-badge sb-green">Completed</span></span><span>R 328.00</span></div>
+      <div class="dt-row"><span>SALE-1091</span><span style="color:var(--text)">Ford Workshop JHB</span><span style="text-align:center"><span class="status-badge sb-orange">Pending</span></span><span>R 4,480.00</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- INVENTORY -->
+<section id="inventory" style="background:var(--bg2)">
+  <div class="showcase-grid reverse">
+    <div class="reveal-right">
+      <div class="section-badge purple">Inventory Management</div>
+      <h2 style="font-size:2.2rem;letter-spacing:-1px;margin:10px 0 14px">Every part, every bin,<br /><span class="gradient-text">always accurate</span></h2>
+      <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.7;max-width:500px;margin-bottom:8px">
+        TradeTrack knows motor spares. Cross-reference codes, multiple descriptions, per-category markup rules, and supplier integration. Stock take is scheduled automatically. Replenishment tells you exactly what to order.
+      </p>
+      <ul class="feature-list">
+        <li><strong>Cross-reference code search</strong> — find any part by OEM, aftermarket or supplier code instantly</li>
+        <li><strong>Per-category markup pricing</strong> — set rules, not manual prices for thousands of SKUs</li>
+        <li><strong>Goods Receiving (GRN)</strong> with automatic cost price and stock update</li>
+        <li><strong>Stock take</strong> — daily rolling or full count with full discrepancy reporting</li>
+        <li><strong>Replenishment report</strong> — 3 formats: standard, by code, tiered by quality</li>
+        <li><strong>18-month stock movement</strong> analysis per product</li>
+        <li><strong>Barcode label printing</strong> direct from inventory</li>
+        <li><strong>Supplier returns &amp; defective tracking</strong></li>
+        <li><strong>Discount matrix</strong> — customer-specific pricing tiers</li>
+        <li><strong>Kit/combo products</strong> with component cost breakdown in cart</li>
+      </ul>
+    </div>
+    <div class="reveal-left">
+      <div class="inventory-mockup">
+        <div class="inv-toolbar">
+          <input class="inv-search" placeholder="🔍  Search part, code, description..." value="brake" readonly />
+          <div class="inv-btn">+ Add Product</div>
+          <div class="inv-btn" style="background:rgba(255,255,255,0.08);color:var(--text-muted)">⬆ Import CSV</div>
+        </div>
+        <table class="inv-table">
+          <thead class="inv-thead">
+            <tr>
+              <th>Cross-Ref</th><th>Description</th><th>Category</th><th>Cost</th><th>Sell Price</th><th>Stock</th>
+            </tr>
+          </thead>
+          <tbody class="inv-tbody">
+            <tr><td>BP-EBC01</td><td>Brake Pads Front EBC Gold</td><td>Brakes</td><td>R 210.00</td><td>R 420.00</td><td class="stock-ok">24</td></tr>
+            <tr><td>BP-FRT02</td><td>Brake Pads Front Generic</td><td>Brakes</td><td>R 95.00</td><td>R 189.00</td><td class="stock-med">8</td></tr>
+            <tr><td>BP-REAR01</td><td>Brake Pads Rear EBC</td><td>Brakes</td><td>R 185.00</td><td>R 370.00</td><td class="stock-ok">15</td></tr>
+            <tr><td>BR-DISC01</td><td>Brake Disc Front 280mm</td><td>Brakes</td><td>R 320.00</td><td>R 640.00</td><td class="stock-low">2</td></tr>
+            <tr><td>BR-DISC02</td><td>Brake Disc Rear 262mm</td><td>Brakes</td><td>R 295.00</td><td>R 590.00</td><td class="stock-ok">11</td></tr>
+            <tr><td>BC-0440</td><td>Brake Caliper Front LH</td><td>Brakes</td><td>R 580.00</td><td>R 1,160.00</td><td class="stock-low">1</td></tr>
+            <tr><td>BM-0220</td><td>Brake Master Cylinder</td><td>Brakes</td><td>R 440.00</td><td>R 880.00</td><td class="stock-ok">6</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FEATURE GRID -->
+<section>
+  <div class="section-header" style="text-align:center">
+    <div class="section-badge reveal">Complete Platform</div>
+    <h2 class="reveal">Everything your store needs,<br /><span class="gradient-text">nothing it doesn't</span></h2>
+    <p class="section-sub reveal" style="margin:0 auto">Every module was built around real problems from real motor spares and trade businesses.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feat-card reveal">
+      <div class="feat-icon blue">💳</div>
+      <h3>Customer Accounts &amp; Debtors</h3>
+      <p>Full credit account management. Aging reports. Automated monthly statements. Debtors payments right from the POS. Loyalty cashback. Never lose track of who owes what.</p>
+      <div class="feat-tags">
+        <span class="feat-tag">Credit Limits</span>
+        <span class="feat-tag">Aging Report</span>
+        <span class="feat-tag">Statements</span>
+        <span class="feat-tag">Loyalty</span>
+      </div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon purple">📦</div>
+      <h3>Supplier Management</h3>
+      <p>Manage your supplier catalogue, purchase orders, and GRNs. Track supplier payments. Reconcile accounts. Supplier aging report. Return and defective part tracking.</p>
+      <div class="feat-tags">
+        <span class="feat-tag">GRN Processing</span>
+        <span class="feat-tag">Payments</span>
+        <span class="feat-tag">Reconciliation</span>
+        <span class="feat-tag">Returns</span>
+      </div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon green">🏪</div>
+      <h3>Multi-Store &amp; Branch Transfers</h3>
+      <p>Run a head office and multiple branches as one system. Transfer stock with markup, freight and VAT pricing rules. Branch-to-branch real-time sync. Consolidated reports across all stores.</p>
+      <div class="feat-tags">
+        <span class="feat-tag">Head Office</span>
+        <span class="feat-tag">Branch Sync</span>
+        <span class="feat-tag">Transfers</span>
+        <span class="feat-tag">Multi-Reports</span>
+      </div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon orange">📊</div>
+      <h3>30+ Built-in Reports</h3>
+      <p>P&amp;L, sales by category, employee performance, inventory valuation, replenishment, customer aging, cashbook, timed sales, loyalty, goods received, and much more.</p>
+      <div class="feat-tags">
+        <span class="feat-tag">P&amp;L</span>
+        <span class="feat-tag">GP Analysis</span>
+        <span class="feat-tag">Day End</span>
+        <span class="feat-tag">Management</span>
+      </div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon red">👔</div>
+      <h3>HR &amp; Payroll</h3>
+      <p>Employee management, attendance tracking, leave management, salary processing with Sunday/holiday premiums, commission tiers, payslips, and full deductions management.</p>
+      <div class="feat-tags">
+        <span class="feat-tag">Payslips</span>
+        <span class="feat-tag">Leave</span>
+        <span class="feat-tag">Commissions</span>
+        <span class="feat-tag">Attendance</span>
+      </div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon cyan">🚚</div>
+      <h3>Delivery &amp; Collections</h3>
+      <p>Dispatch delivery jobs to drivers. Track status live. Drivers update from their own device. Managers see all active jobs and can communicate in-app. Auto-refresh every 10 seconds.</p>
+      <div class="feat-tags">
+        <span class="feat-tag">Job Dispatch</span>
+        <span class="feat-tag">Driver Portal</span>
+        <span class="feat-tag">Live Updates</span>
+        <span class="feat-tag">Notifications</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- MULTI-STORE -->
+<section id="multistore" style="background:var(--bg2)">
+  <div class="showcase-grid">
+    <div class="reveal-left">
+      <div class="section-badge green">Multi-Store</div>
+      <h2 style="font-size:2.2rem;letter-spacing:-1px;margin:10px 0 14px">One system.<br /><span class="gradient-text">All your branches.</span></h2>
+      <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.7;max-width:500px;margin-bottom:8px">
+        TradeTrack's hierarchical multi-store architecture puts head office in charge. Push products and pricing to all branches. Transfer stock with full costing rules. View consolidated performance across every store from one dashboard.
+      </p>
+      <ul class="feature-list">
+        <li><strong>Head office controls</strong> branch pricing, product lists, and settings</li>
+        <li><strong>Branch-to-branch stock transfers</strong> with markup, freight, VAT rules</li>
+        <li><strong>Automatic sync</strong> — branches stay up to date in real time</li>
+        <li><strong>Consolidated management reports</strong> across all stores</li>
+        <li><strong>Transfer history</strong> with full financial audit trail</li>
+        <li><strong>Accept / reject transfers</strong> at branch level with PIN authorization</li>
+      </ul>
+    </div>
+    <div class="reveal-right">
+      <div class="multistore-diagram">
+        <div class="ms-head-office">
+          <div class="ms-ho-label">🏢 Head Office</div>
+          <div class="ms-ho-name">TradeTrack HQ</div>
+          <div style="font-size:0.7rem;color:var(--text-muted);margin-top:4px">Controls pricing · Product sync · Consolidated reports</div>
+        </div>
+        <div style="height:24px;display:flex;justify-content:center;align-items:center">
+          <svg width="200" height="24" viewBox="0 0 200 24">
+            <line x1="40" y1="0" x2="40" y2="24" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <line x1="100" y1="0" x2="100" y2="24" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <line x1="160" y1="0" x2="160" y2="24" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <line x1="40" y1="24" x2="160" y2="24" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+          </svg>
+        </div>
+        <div class="ms-branches">
+          <div class="ms-branch">
+            <div class="ms-branch-name">🏪 Branch A</div>
+            <div class="ms-branch-stat">Johannesburg</div>
+            <div class="ms-branch-stat">Today: R 18,420</div>
+            <div class="ms-branch-stat">Stock items: 2,840</div>
+            <div class="ms-sync-badge">✓ Synced</div>
+          </div>
+          <div class="ms-branch">
+            <div class="ms-branch-name">🏪 Branch B</div>
+            <div class="ms-branch-stat">Pretoria</div>
+            <div class="ms-branch-stat">Today: R 12,310</div>
+            <div class="ms-branch-stat">Stock items: 1,960</div>
+            <div class="ms-sync-badge">✓ Synced</div>
+          </div>
+          <div class="ms-branch">
+            <div class="ms-branch-name">🏪 Branch C</div>
+            <div class="ms-branch-stat">Centurion</div>
+            <div class="ms-branch-stat">Today: R 9,870</div>
+            <div class="ms-branch-stat">Stock items: 1,540</div>
+            <div class="ms-sync-badge">✓ Synced</div>
+          </div>
+        </div>
+        <div style="margin-top:14px;background:rgba(14,165,233,0.06);border:1px solid rgba(14,165,233,0.15);border-radius:8px;padding:10px 14px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:0.72rem;color:var(--primary-light);font-weight:700">CONSOLIDATED TODAY</span>
+            <span style="font-size:1rem;font-weight:900;color:var(--text)">R 40,600</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- REPORTS -->
+<section id="reports">
+  <div class="section-header" style="text-align:center">
+    <div class="section-badge orange reveal">30+ Reports</div>
+    <h2 class="reveal">Stop guessing.<br /><span class="gradient-text">Start knowing.</span></h2>
+    <p class="section-sub reveal" style="margin:0 auto">Every report you need to run a profitable motor spares business — all available with a single click, for any date range.</p>
+  </div>
+  <div class="reports-grid">
+    <div class="report-card reveal"><div class="rc-icon">💰</div><div class="rc-name">Profit &amp; Loss</div><div class="rc-desc">Full P&amp;L with gross profit and margin for any period</div></div>
+    <div class="report-card reveal"><div class="rc-icon">📈</div><div class="rc-name">Daily Sales Summary</div><div class="rc-desc">All sales, refunds and totals in one daily view</div></div>
+    <div class="report-card reveal"><div class="rc-icon">🗂️</div><div class="rc-name">Sales by Category</div><div class="rc-desc">Which categories drive your revenue and GP</div></div>
+    <div class="report-card reveal"><div class="rc-icon">📦</div><div class="rc-name">Inventory Valuation</div><div class="rc-desc">Current stock value at cost and selling price</div></div>
+    <div class="report-card reveal"><div class="rc-icon">🔁</div><div class="rc-name">Replenishment</div><div class="rc-desc">What to reorder — three formats including tiered by quality</div></div>
+    <div class="report-card reveal"><div class="rc-icon">📉</div><div class="rc-name">Stock Movement</div><div class="rc-desc">18 months of movement history per product</div></div>
+    <div class="report-card reveal"><div class="rc-icon">👤</div><div class="rc-name">Customer Aging</div><div class="rc-desc">Who owes what — 30 / 60 / 90+ day buckets</div></div>
+    <div class="report-card reveal"><div class="rc-icon">🏭</div><div class="rc-name">Supplier Aging</div><div class="rc-desc">What you owe suppliers by due date</div></div>
+    <div class="report-card reveal"><div class="rc-icon">🏆</div><div class="rc-name">Employee Performance</div><div class="rc-desc">Sales per salesperson, GP, and transaction count</div></div>
+    <div class="report-card reveal"><div class="rc-icon">💸</div><div class="rc-name">Cashbook Entries</div><div class="rc-desc">All cash receipts and payments in one view</div></div>
+    <div class="report-card reveal"><div class="rc-icon">⏰</div><div class="rc-name">Timed Sales</div><div class="rc-desc">Sales broken down by time interval — spot your busy hours</div></div>
+    <div class="report-card reveal"><div class="rc-icon">⭐</div><div class="rc-name">Loyalty Report</div><div class="rc-desc">Points earned, redeemed, balances and top customers</div></div>
+    <div class="report-card reveal"><div class="rc-icon">🚫</div><div class="rc-name">Lost Sales</div><div class="rc-desc">What customers asked for that you didn't have in stock</div></div>
+    <div class="report-card reveal"><div class="rc-icon">📋</div><div class="rc-name">Combined Management</div><div class="rc-desc">One report: transactions, GP, categories and debtors combined</div></div>
+    <div class="report-card reveal"><div class="rc-icon">🆕</div><div class="rc-name">New Items</div><div class="rc-desc">Products added during the selected period</div></div>
+    <div class="report-card reveal"><div class="rc-icon">🛡️</div><div class="rc-name">Authorization Log</div><div class="rc-desc">Every manager override with employee and reason — full audit trail</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HR SECTION -->
+<section style="background:var(--bg2)">
+  <div class="section-header" style="text-align:center">
+    <div class="section-badge purple reveal">HR &amp; Payroll</div>
+    <h2 class="reveal">Run your team with<br /><span class="gradient-text">the same system</span></h2>
+    <p class="section-sub reveal" style="margin:0 auto">Stop managing staff in separate spreadsheets and apps. TradeTrack's HR module handles everything from daily attendance to monthly payslips.</p>
+  </div>
+  <div class="hr-cards">
+    <div class="hr-card reveal">
+      <div class="hr-card-icon">🕐</div>
+      <h4>Attendance Tracking</h4>
+      <p>Daily clock-in/out. Absent deductions calculated automatically. Sunday and public holiday premiums configured per employee.</p>
+    </div>
+    <div class="hr-card reveal">
+      <div class="hr-card-icon">🏖️</div>
+      <h4>Leave Management</h4>
+      <p>Multiple leave types, annual leave balances, leave requests, approvals, year-end leave processing, and public holiday calendar.</p>
+    </div>
+    <div class="hr-card reveal">
+      <div class="hr-card-icon">💵</div>
+      <h4>Payslips &amp; Payroll</h4>
+      <p>Auto-calculate payslips with base salary, allowances, deductions, loans and commission for every employee every month.</p>
+    </div>
+    <div class="hr-card reveal">
+      <div class="hr-card-icon">📈</div>
+      <h4>Commission &amp; Targets</h4>
+      <p>Tiered commission settings per employee. Sales targets. Commission automatically calculated from actual POS transactions.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECURITY -->
+<section>
+  <div class="section-header" style="text-align:center">
+    <div class="section-badge reveal" style="background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.25);color:#f87171">Security &amp; Reliability</div>
+    <h2 class="reveal">Enterprise-grade security,<br /><span class="gradient-text">zero cloud risk</span></h2>
+    <p class="section-sub reveal" style="margin:0 auto">Your data stays on your machine. TradeTrack runs locally — not in someone else's cloud. Backups go to your OneDrive. Every action leaves an audit trail.</p>
+  </div>
+  <div class="security-grid">
+    <div class="sec-card reveal">
+      <div class="sec-icon">👆</div>
+      <div>
+        <h4>Biometric Fingerprint Login</h4>
+        <p>Staff log in with their fingerprint. No PINs to share or forget. Each transaction is tied to a verified identity. Fast, secure, and audit-ready.</p>
+      </div>
+    </div>
+    <div class="sec-card reveal">
+      <div class="sec-icon">🔐</div>
+      <div>
+        <h4>Role-Based Access Control</h4>
+        <p>Five permission levels: Admin, Manager, Supervisor, Cashier, Driver. Every module and feature is individually togglable per role. Cashiers can't see costs. Drivers only see their jobs.</p>
+      </div>
+    </div>
+    <div class="sec-card reveal">
+      <div class="sec-icon">☁️</div>
+      <div>
+        <h4>Encrypted Cloud Backups</h4>
+        <p>Automatic daily backups to your own OneDrive — encrypted, compressed, and scheduled. Keep 30 days of history. Email notification on completion or failure.</p>
+      </div>
+    </div>
+    <div class="sec-card reveal">
+      <div class="sec-icon">📝</div>
+      <div>
+        <h4>Full Authorization Audit Trail</h4>
+        <p>Every manager override, price markdown, and supervisor approval is logged with employee, timestamp and reason. The Authorization Log report gives you a complete picture.</p>
+      </div>
+    </div>
+    <div class="sec-card reveal">
+      <div class="sec-icon">💻</div>
+      <div>
+        <h4>Local-First Architecture</h4>
+        <p>TradeTrack runs as a desktop app on your hardware. Your data never leaves your premises. No monthly subscription to a cloud service. Works without internet.</p>
+      </div>
+    </div>
+    <div class="sec-card reveal">
+      <div class="sec-icon">🔄</div>
+      <div>
+        <h4>Automatic Updates</h4>
+        <p>One-click updates delivered silently in the background. New features and fixes arrive automatically. Schedule updates for after hours so your store is never disrupted.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COMPARISON TABLE -->
+<section style="background:var(--bg2)">
+  <div class="section-header" style="text-align:center">
+    <div class="section-badge reveal">Why TradeTrack?</div>
+    <h2 class="reveal">Built for motor spares.<br /><span class="gradient-text">Generic POS systems aren't.</span></h2>
+    <p class="section-sub reveal" style="margin:0 auto">Most POS systems are built for retail shops or restaurants. TradeTrack was built for the motor spares and trade industry specifically.</p>
+  </div>
+  <div class="comparison-wrap reveal">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th class="highlight">TradeTrack POS</th>
+          <th>Generic POS</th>
+          <th>Spreadsheets</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Cross-reference part number search</td><td class="highlight"><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td>Dual simultaneous POS terminals</td><td class="highlight"><span class="check">✓</span></td><td><span class="partial">Add-on</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td>Full credit account / debtors management</td><td class="highlight"><span class="check">✓</span></td><td><span class="partial">Basic</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td>Lay-by with deposit tracking</td><td class="highlight"><span class="check">✓</span></td><td><span class="partial">Rare</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td>Supplier GRN with automatic stock update</td><td class="highlight"><span class="check">✓</span></td><td><span class="partial">Basic</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td>Tiered replenishment reporting</td><td class="highlight"><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td>Multi-store with branch transfers</td><td class="highlight"><span class="check">✓</span></td><td><span class="partial">Add-on</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td>Built-in HR &amp; Payroll</td><td class="highlight"><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="partial">Manual</span></td></tr>
+        <tr><td>Biometric fingerprint login</td><td class="highlight"><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td>Delivery job dispatch with driver portal</td><td class="highlight"><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td>Works offline (local database)</td><td class="highlight"><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>30+ built-in reports</td><td class="highlight"><span class="check">✓</span></td><td><span class="partial">5–10</span></td><td><span class="partial">Manual</span></td></tr>
+        <tr><td>Kiosk / customer-facing screen</td><td class="highlight"><span class="check">✓</span></td><td><span class="partial">Rare</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td>AI-powered help assistant (built-in)</td><td class="highlight"><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div class="section-header" style="text-align:center">
+    <div class="section-badge reveal">What Stores Say</div>
+    <h2 class="reveal">Trusted by motor spares stores<br /><span class="gradient-text">across South Africa</span></h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal">
+      <div class="quote-mark">"</div>
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">Before TradeTrack, we had no idea which parts were selling and which were sitting. The replenishment report alone paid for the system in the first month. Our stock ordering is completely transformed.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background:linear-gradient(135deg,#0ea5e9,#a855f7)">JV</div>
+        <div>
+          <div class="author-name">Johan van der Merwe</div>
+          <div class="author-role">Owner — JV Spares, Johannesburg</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal">
+      <div class="quote-mark">"</div>
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">We run three stores and before TradeTrack we had no way to see combined performance. Now I open my laptop and see all three branches in one dashboard. Branch transfers take minutes, not phone calls.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background:linear-gradient(135deg,#22c55e,#0ea5e9)">AP</div>
+        <div>
+          <div class="author-name">Ahmed Patel</div>
+          <div class="author-role">Director — Patel Auto Parts (3 Branches)</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal">
+      <div class="quote-mark">"</div>
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">The credit account and debtors management is exactly what we needed. We sell to a lot of workshops on account. Statements go out automatically, aging reports show me who's overdue, and payments are captured right at the POS.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">SM</div>
+        <div>
+          <div class="author-name">Sandra Mokoena</div>
+          <div class="author-role">Manager — Motor Parts Direct, Pretoria</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="section-header" style="text-align:center">
+    <div class="section-badge reveal">Pricing</div>
+    <h2 class="reveal">Simple, transparent pricing.<br /><span class="gradient-text">No surprises.</span></h2>
+    <p class="section-sub reveal" style="margin:0 auto">One-time licence or monthly subscription. Your data stays on your hardware. No per-transaction fees.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card reveal">
+      <div class="pricing-name">Starter</div>
+      <div class="pricing-price"><span>R</span>1,499</div>
+      <div class="pricing-cycle">once-off licence</div>
+      <ul class="pricing-features">
+        <li>Single POS terminal</li>
+        <li>Full inventory management</li>
+        <li>Customer accounts &amp; debtors</li>
+        <li>Supplier management + GRN</li>
+        <li>10 built-in reports</li>
+        <li>Barcode label printing</li>
+        <li>Lay-by management</li>
+        <li class="dim">Multi-store / branches</li>
+        <li class="dim">HR &amp; Payroll module</li>
+        <li class="dim">Delivery tracking</li>
+      </ul>
+      <a href="mailto:sales@tradetrackpos.co.za" class="pricing-btn outline">Get Starter</a>
+    </div>
+
+    <div class="pricing-card featured reveal">
+      <div class="pricing-popular">Most Popular</div>
+      <div class="pricing-name">Professional</div>
+      <div class="pricing-price"><span>R</span>2,999</div>
+      <div class="pricing-cycle">once-off licence</div>
+      <ul class="pricing-features">
+        <li>Dual POS terminals (POS 1 + POS 2)</li>
+        <li>Full inventory management</li>
+        <li>Customer accounts &amp; debtors</li>
+        <li>Supplier management + GRN</li>
+        <li>All 30+ reports</li>
+        <li>HR &amp; Payroll module</li>
+        <li>Delivery &amp; collections tracking</li>
+        <li>Loyalty program</li>
+        <li>Biometric fingerprint login</li>
+        <li>Kiosk / customer-facing screen</li>
+        <li>Cloud backup (OneDrive)</li>
+        <li class="dim">Multi-store / branches</li>
+      </ul>
+      <a href="mailto:sales@tradetrackpos.co.za" class="pricing-btn filled">Get Professional</a>
+    </div>
+
+    <div class="pricing-card reveal">
+      <div class="pricing-name">Enterprise</div>
+      <div class="pricing-price" style="font-size:1.8rem">Custom</div>
+      <div class="pricing-cycle">for multi-store businesses</div>
+      <ul class="pricing-features">
+        <li>Everything in Professional</li>
+        <li>Multi-store head office + branches</li>
+        <li>Branch-to-branch stock transfers</li>
+        <li>Consolidated multi-store reports</li>
+        <li>Custom pricing rules per branch</li>
+        <li>Priority support &amp; onboarding</li>
+        <li>Custom feature development</li>
+        <li>Training for your team</li>
+        <li>SLA-backed uptime guarantee</li>
+        <li>Dedicated account manager</li>
+      </ul>
+      <a href="mailto:sales@tradetrackpos.co.za" class="pricing-btn outline">Contact Sales</a>
+    </div>
+  </div>
+
+  <div class="contact-bar reveal" style="max-width:960px;margin:40px auto 0">
+    <div class="contact-bar-info">
+      <div class="contact-bar-icon">📞</div>
+      <div>
+        <strong>Talk to a TradeTrack specialist</strong>
+        <p>We'll walk you through the system, import your existing stock list, and have you live within days.</p>
+      </div>
+    </div>
+    <a href="mailto:sales@tradetrackpos.co.za" class="btn-large">📧 Get in Touch</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="section-badge reveal" style="margin-bottom:24px">Ready to transform your store?</div>
+  <h2 class="reveal">Your motor spares store deserves<br /><span class="gradient-text">a system built for it</span></h2>
+  <p class="reveal">Join motor spares stores across South Africa already running on TradeTrack POS. Get set up in days, not months.</p>
+  <div class="hero-ctas reveal">
+    <a href="#pricing" class="btn-large">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      Start Your Free Trial
+    </a>
+    <a href="mailto:sales@tradetrackpos.co.za" class="btn-outline-large">
+      📧 Contact Sales
+    </a>
+  </div>
+  <p class="cta-note reveal"><span>✓</span> No credit card required &nbsp;·&nbsp; <span>✓</span> Free setup assistance &nbsp;·&nbsp; <span>✓</span> Import your existing stock list free</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a class="nav-logo" href="#" style="margin-bottom:12px;display:inline-flex">
+        <div class="nav-logo-icon">TT</div>
+        TradeTrack<span style="color:var(--primary-light);margin-left:3px">POS</span>
+      </a>
+      <p>The complete point-of-sale and business management system built for motor spares stores and trade businesses across South Africa.</p>
+      <div style="display:flex;gap:12px">
+        <a href="mailto:sales@tradetrackpos.co.za" style="color:var(--text-muted);text-decoration:none;font-size:0.85rem">📧 sales@tradetrackpos.co.za</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-heading">Product</div>
+      <ul class="footer-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#inventory">Inventory</a></li>
+        <li><a href="#reports">Reports</a></li>
+        <li><a href="#multistore">Multi-Store</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Modules</div>
+      <ul class="footer-links">
+        <li><a href="#">Point of Sale</a></li>
+        <li><a href="#">HR &amp; Payroll</a></li>
+        <li><a href="#">Delivery Tracking</a></li>
+        <li><a href="#">Customer Accounts</a></li>
+        <li><a href="#">Kiosk Mode</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Company</div>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Support</a></li>
+        <li><a href="#">Updates</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 TradeTrack POS. All rights reserved. Built in South Africa 🇿🇦</div>
+    <div class="footer-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Licence Agreement</a>
+    </div>
+  </div>
+</footer>
+
+<!-- SCROLL ANIMATION ENGINE -->
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+    observer.observe(el);
+  });
+
+  // Stagger children within grids
+  document.querySelectorAll('.pain-grid, .features-grid, .reports-grid, .hr-cards, .testimonials-grid').forEach(grid => {
+    const items = grid.querySelectorAll('.reveal');
+    items.forEach((item, i) => {
+      item.style.transitionDelay = `${i * 60}ms`;
+    });
+  });
+
+  // Nav shadow on scroll
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 20) {
+      nav.style.background = 'rgba(6,11,24,0.97)';
+    } else {
+      nav.style.background = 'rgba(6,11,24,0.85)';
+    }
+  });
+
+  // Animated counter
+  function animateCounter(el, target, prefix = '', suffix = '') {
+    let start = 0;
+    const duration = 1800;
+    const step = target / (duration / 16);
+    const timer = setInterval(() => {
+      start = Math.min(start + step, target);
+      el.textContent = prefix + Math.floor(start).toLocaleString() + suffix;
+      if (start >= target) clearInterval(timer);
+    }, 16);
+  }
+
+  // Trigger counters when stats strip is in view
+  const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const numbers = entry.target.querySelectorAll('.stat-number span');
+        numbers.forEach(el => {
+          const val = el.textContent.trim();
+          if (!isNaN(val)) animateCounter(el, parseInt(val));
+        });
+        statsObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  const statsStrip = document.querySelector('.stats-strip');
+  if (statsStrip) statsObserver.observe(statsStrip);
+</script>
+
+</body>
+</html>
